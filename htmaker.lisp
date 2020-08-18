@@ -97,7 +97,7 @@
                     )
                 ))))
 
-(defparameter *blog-text* (uiop:read-file-string "/home/antepod/code/lisp/htmaker/on-gentoo.txt"))
+(defparameter *blog-text* "nothing here")
 
 (defparameter *root-dir* "/home/antepod/Documents/www/ls-a/")
 (defparameter *blog-dir* (cat *root-dir* "blog/"))   
@@ -130,6 +130,11 @@
                               (push (prepend-page (pop info)) reps)
                               (push (pop info) reps)))))
       
+      ;(format t "start:~%")
+      ;(format t "~A~%" info)
+      ;(format t "~A~%" skeleton)
+      ;(format t "~A~%" replacements)
+      ;(format t "end~%")
       (mak-page skeleton 
                 :replacements 
                 (concatenate 'list replacements (list 'page-path filepath))

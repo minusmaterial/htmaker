@@ -47,6 +47,7 @@
                 :depth depth)))
 
 (defun write-blog-pages (source-dir out-dir)
+  (format t "hahaha~%")
     (let* ((in-dir (check-trailing-slash source-dir))
            (source-files (mapcar #'namestring
                                  (directory 
