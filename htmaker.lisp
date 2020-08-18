@@ -76,7 +76,7 @@
                     "<hr />")
                 ))))
 
-(defparameter *blog-text* (uiop:read-file-string "/home/antepod/code/lisp/htmaker/on-gentoo.txt"))
+(defparameter *blog-text* "nothing here")
 
 (defparameter *root-dir* "/home/antepod/Documents/www/ls-a/")
 (defparameter *blog-dir* (cat *root-dir* "blog/"))   
@@ -108,14 +108,17 @@
                                         (pop info)) 
                             reps))))
       
+      ;(format t "start:~%")
+      ;(format t "~A~%" info)
+      ;(format t "~A~%" skeleton)
+      ;(format t "~A~%" replacements)
+      ;(format t "end~%")
       (mak-page skeleton 
                 :replacements 
                 replacements)
       ))
 
 
-
-
 (defun complete-update-ls ()
     (update-blog-directory *root-dir*)
-    (trivial-shell:shell-command "server syncls"))
+    (trivial-shell:shell-command "server sync"))
