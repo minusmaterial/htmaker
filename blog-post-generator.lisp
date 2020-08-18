@@ -37,26 +37,23 @@
                               (getf d 'title)
                               l)))
                           data links)))
-      (print links)
-      (print newlinks)
+      ;(print links)
+      ;(print newlinks)
       (mak-page *blog-index-skeleton*
                 :replacements
                 (list
-                  'blog-links newlinks
+                  'index-links newlinks
                   'page-title "ls-a: Blog index")
                 :depth depth)))
 
-(defun write-blog-page (fn-in fn-out)
-    (write-to-file (mak-page-dynamic (uiop:read-file-string fn-in))
-                 fn-out))
-
 (defun write-blog-pages (source-dir out-dir)
     (let* ((in-dir (check-trailing-slash source-dir))
-           (source-files (directory 
-                          (cat in-dir "/*.txt"))))
+           (source-files (mapcar #'namestring
+                                 (directory 
+                                   (cat in-dir "/*.txt")))))
       (iterate (for f in source-files)
-               (write-blog-page f 
-                                (merge-pathnames out-dir
+               (write-to-file (mak-page-dynamic f)
+                              (merge-pathnames out-dir
                                                 (cat (pathname-name f)
                                                      ".html"))))
       nil))
@@ -69,19 +66,21 @@
                             "source/blog/"))
            (source-files (directory (cat source-dir 
                                          "*.txt")))
-           (outfile-names (mapcar #'pathname-name 
-                                  source-files))
-           (blog-data (mapcar #'parse-source-file
-                              (mapcar #'uiop:read-file-string 
-                                      source-files)))
            (relative-outfile-links 
             (mapcar (lambda (x) (cat "/blog/"
                                      x 
                                      ".html")) 
                     (mapcar #'pathname-name source-files))))
       
-      (write-blog-pages source-dir blog-dir)
       (format t "~A~%" relative-outfile-links)
-      (write-to-file (mak-blog-index blog-data relative-outfile-links)
-                     (cat blog-dir "index_blog.html"))
+      (write-blog-pages source-dir blog-dir)
       ))
+
+(defun update-directory (source-dir out-dir)
+  (let* ((source-files (directory (cat source-dir "*.txt"))))
+    (print source-files)
+    (iterate (for f in source-files)
+      (write-to-file (mak-page-dynamic (namestring f))
+                     (merge-pathnames out-dir
+                                      (cat (pathname-name f)
+                                           ".html"))))))

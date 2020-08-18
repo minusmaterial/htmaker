@@ -1,9 +1,8 @@
 # htmaker
-### _Your Name <your.name@example.com>_
+### antimaterium@protonmail.com
 
-This is a project to do ... something.
+This is a simple static website generator, written in Common Lisp.
 
 ## License
 
-Specify license here
-
+[Insert license here]
