@@ -6,7 +6,6 @@
     input-text))
 
 (defun get-source-file-info (lines &optional (marker "!inf:"))
-    (print lines)
     (append 
       ;;;first, all of the non-text fields
       (iter (for line in lines)

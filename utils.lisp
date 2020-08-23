@@ -121,3 +121,10 @@
 
 (defun strip-till-source (path)
     )
+
+(defun split-source-file-text (input-text)
+    (delete "" 
+            (split-sequence:split-sequence
+            #\Newline 
+            input-text)
+            :test #'equal)) 

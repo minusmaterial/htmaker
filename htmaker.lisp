@@ -61,19 +61,24 @@
                     (in p 
                       (in h4 "Comments")
                       
-                      (in-opt form 
-                        ("action=/comment.php method=\"post\"")
+                      (in blockquote (in-opt form 
+                        ("action=/comment.php method=\"post\" id=\"commentform\"")
                         (in p
                           "Name (optional):<br/>"
                           (in-opt input
-                            ("type=\"text\" name=\"Name\"")))
-                        (in p
+                            ("type=\"text\" name=\"name\""))
+                          "<br/>"
                           "Comment:<br/>"
+                          "<textarea name=\"comment\" form=\"commentform\" rows=\"8\" cols=\"50\"></textarea>"
+                          "<br/>"
+                          (in-opt input 
+                            ("type=\hidden\" name=\"sourcefile\""))
+                          "<br/>"
                           (in-opt input
-                            ("type=\"text\" name=\"Comment\"")))
-                        (in p
-                          (in-opt input
-                            ("type=\"submit\" value=\"Submit\"")))))
+                            ("type=\"submit\" value=\"Submit\""))))
+                          
+
+                          ))
 
 
                     )
@@ -129,18 +134,23 @@
                               ((eq info nil) reps) 
                               (push (prepend-page (pop info)) reps)
                               (push (pop info) reps)))))
+      (print filepath)
       
-      ;(format t "start:~%")
-      ;(format t "~A~%" info)
-      ;(format t "~A~%" skeleton)
-      ;(format t "~A~%" replacements)
-      ;(format t "end~%")
       (mak-page skeleton 
                 :replacements 
                 (concatenate 'list replacements (list 'page-path filepath))
                 :path
                 filepath)
       ))
+
+(defun update-directory (source-dir out-dir)
+  (let* ((source-files (directory (cat source-dir "*.txt"))))
+    (iterate (for f in source-files)
+      (write-to-file (mak-page-dynamic (namestring f))
+                     (merge-pathnames out-dir
+                                      (cat (pathname-name f)
+                                           ".html"))))))
+
 
 (defun complete-update-ls ()
     (update-directory (cat *root-dir* "source/") *root-dir*)
