@@ -122,3 +122,6 @@
 (defun complete-update-ls ()
     (update-blog-directory *root-dir*)
     (trivial-shell:shell-command "server sync"))
+
+(defun main ()
+  (complete-update-ls))

@@ -1,2 +1,2 @@
 cd ~/code/lisp/htmaker
-sbcl --load ./script.lisp
+sbcl --load ./run.lisp
