@@ -88,3 +88,43 @@
 (defun prepend-page (sym)
    (intern (cat "PAGE-" (symbol-name sym))))
 
+(defun path-dir (path)
+    (let* ((rev (reverse path))
+          (pos (position #\/ rev)))
+        (reverse (subseq rev pos))))
+
+(defun file-brothers (path &optional (suffix ".txt"))
+    (let ((dir (path-dir path)))
+      (remove-if (lambda (x) (equal x path)) 
+                 (mapcar #'namestring 
+                         (directory (cat dir
+                                    "*"
+                                    suffix))))))
+
+(defun file-brothers-links (pathlist)
+    (let* ((file-datae (mapcar (lambda (x)
+                           (parse-source-file (read-from-file x)))
+                         pathlist))
+           (relative-outfile-links 
+            (mapcar (lambda (x) (cat "/blog/"
+                                     x 
+                                     ".html")) 
+                    (mapcar #'pathname-name pathlist))))
+      (mapcar 
+        (lambda (data a-link)
+          `(in p
+            ,(getf data 'date)
+            ,(link
+              (getf data 'title)
+              a-link)))
+       file-datae relative-outfile-links)))
+
+(defun strip-till-source (path)
+    )
+
+(defun split-source-file-text (input-text)
+    (delete "" 
+            (split-sequence:split-sequence
+            #\Newline 
+            input-text)
+            :test #'equal)) 

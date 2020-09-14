@@ -22,63 +22,71 @@
          "\" alt=\"" alt-text 
          "\"" ">"))
 
-(defun i-to-tabspace (i)
+(defun tabs (i)
   (let ((output nil)) 
        (iter (repeat i) 
              (setf output 
                    (cat "    " output)))
        (cat "" output)))
 
-(defun parse-special-forms (form i &optional (depth 0))
+(defun parse-special-forms (form i &key (filepath "~"))
     (cond ((eq (car form) 'in)
-           (cat (i-to-tabspace i) 
+           (cat (tabs i) 
                 "<" (symbol-name (car (cdr form))) ">"
                 "~%"
-                (mak-html-iterator (cdr (cdr form)) (+ i 1))
-                (i-to-tabspace i)
+                (mak-html-iterator (cdr (cdr form)) (+ i 1) filepath)
+                (tabs i)
                 "</" (symbol-name (car (cdr form))) ">"
                 "~%"
                 ))
           ((eq (car form) 'in-opt)
-                   (cat (i-to-tabspace i)
+                   (cat (tabs i)
                         "<" (symbol-name (car (cdr form))) 
                         " " (apply #'cat (car (cdr (cdr form))))
                         ">"
                         "~%"
                         (mak-html-iterator (cdr (cdr (cdr form))) 
-                                           (+ i 1))
-                        (i-to-tabspace i)
+                                           (+ i 1) filepath)
+                        (tabs i)
                         "</" (symbol-name (car (cdr form))) ">"
                         "~%"
                         ))
           ((eq (car form) 'link)
-           (cat (i-to-tabspace i)
-                (link (car (cdr form)) (car (cdr (cdr form)))
-                      :depth depth)
+           (cat (tabs i)
+                (link (car (cdr form)) (car (cdr (cdr form))))
                 "~%"))
           ((eq (car form) 'link-rel)
-           (cat (i-to-tabspace i)
+           (cat (tabs i)
                 (link-rel (car (cdr form)) (car (cdr (cdr form))))
                 "~%"))
           ((eq (car form) 'img)
-           (cat (i-to-tabspace i)
+           (cat (tabs i)
                 (img (car (cdr form)))
                 "~%"))
-          (T (cat (i-to-tabspace i)
+          ((eq (car form) 'index-links)
+           (cat (tabs i)
+                (mak-html-iterator 
+                  (file-brothers-links
+                    (file-brothers filepath))
+                  i
+                  filepath)
+                "<HR />~%"))
+          (T (cat (tabs i)
                   (symbol-name (car form))
                   "~%"
-                  (mak-html-iterator (cdr form)  i )))))
+                  (mak-html-iterator (cdr form) i filepath)))))
   
-(defun mak-html-iterator (form i &optional (depth 0))
+(defun mak-html-iterator (form i &optional (path "~"))
     (if (not (non-empty-list-p form))
-        ;It's not a list- just a thing itself.  Just put the thing
+        ;It's not a list of atoms- just an atom.  So echo the atom.
         (cond ((eq nil form) "")
-              ((typep form 'string) (cat (i-to-tabspace i) form "~%"))
+              ((typep form 'string) (cat (tabs i) form "~%"))
               (T (cat (symbol-name form) "~%")))
+        ;Else, it's a non-empty list.  So unless it's a special form, recurse.
         (if (not (symbolp (car form)))
-            (cat (mak-html-iterator (car form) i)
-                 (mak-html-iterator (cdr form) i))
-            (parse-special-forms form i depth))))
+            (cat (mak-html-iterator (car form) i path)
+                 (mak-html-iterator (cdr form) i path))
+            (parse-special-forms form i :filepath path))))
 
-(defun mak-html (form &optional (depth 0))
-    (mak-html-iterator form 0 depth))
+(defun mak-html (form &optional (path "~"))
+    (mak-html-iterator form 0 path))
