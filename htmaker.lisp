@@ -134,8 +134,9 @@
                               ((eq info nil) reps) 
                               (push (prepend-page (pop info)) reps)
                               (push (pop info) reps)))))
-      (print filepath)
+      ;(print filepath)
       
+      (print (concatenate 'list replacements (list 'page-path filepath)))
       (mak-page skeleton 
                 :replacements 
                 (concatenate 'list replacements (list 'page-path filepath))
@@ -153,11 +154,12 @@
 
 
 (defun complete-update-ls ()
+  
     (update-directory (cat *root-dir* "source/") *root-dir*)
     (update-directory (cat *root-dir* "source/contact/") (cat *root-dir* "contact/"))
     (update-directory (cat *root-dir* "source/blog/") 
                       (cat *root-dir* "blog/"))
-    (trivial-shell:shell-command "server syncls")
+    (trivial-shell:shell-command "server sync")
     )
 
 (defun main ()
