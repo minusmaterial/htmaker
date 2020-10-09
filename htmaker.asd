@@ -11,6 +11,7 @@
 			   (:file "utils")
 			   (:file "source-file-parser")
 			   (:file "parser")
+			   (:file "config")
                (:file "htmaker")
 			   (:file "blog-post-generator")
 			   ))
