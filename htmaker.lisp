@@ -11,7 +11,7 @@
     '(in-opt ul 
              ("id=\"container\""
               "class=\"sidenav\"")
-             (img "/resources/a_crazy_bacteria_algo.png")
+             (img "/resources/crazybacterialgo.png")
              (in li (link "Home" "/index.html"))
              (in li (link "Blog" "/blog/index_blog.html"))
              (in li (link "Contact" "/contact/contact.html"))
@@ -41,6 +41,8 @@
                   (in h1 "Contact Information")
                   page-text
                   )))))
+
+
 
 (defparameter *blog-post-skeleton*
       `("<!DOCTYPE html>"
@@ -78,11 +80,7 @@
                             ("type=\"submit\" value=\"Submit\""))))
                           
 
-                          ))
-
-
-                    )
-                ))))
+                          )))))))
 
 (defparameter *blog-index-skeleton*
       `("<!DOCTYPE html>"
@@ -99,15 +97,14 @@
                     "<HR />"
                     index-links
                     "<HR />"
-                    )
-                ))))
+                    )))))
+
+(defparameter *default-skeleton* *index-skeleton*)
 
 (defparameter *blog-text* "nothing here")
 
-(defparameter *root-dir* "/home/antepod/Documents/www/ls-a/")
-(defparameter *blog-dir* (cat *root-dir* "blog/"))   
-(defparameter *local-blog-index-path* 
-              (pathname (cat *blog-dir* "index_blog.html")))
+(defparameter *ls-a-root-dir* "/home/antepod/Documents/www/ls-a/")
+(defparameter *alexradcliffe-root-dir* "/home/antepod/Documents/www/alexradcliffe/")
 
 (defun mak-page (skeleton &key (replacements nil)
                                (path "~"))
@@ -127,16 +124,15 @@
           (skeleton (symbol-value (intern 
                       (string-upcase 
                         (cat "*" 
-                             (getf info 'texttype)
+                             (let ((tempval (getf info 'texttype)))
+                               (if tempval tempval "default"))
                              "-skeleton*")))))
           (replacements (nreverse
                           (do ((reps nil))
                               ((eq info nil) reps) 
                               (push (prepend-page (pop info)) reps)
                               (push (pop info) reps)))))
-      ;(print filepath)
       
-      (print (concatenate 'list replacements (list 'page-path filepath)))
       (mak-page skeleton 
                 :replacements 
                 (concatenate 'list replacements (list 'page-path filepath))
@@ -145,22 +141,35 @@
       ))
 
 (defun update-directory (source-dir out-dir)
-  (let* ((source-files (directory (cat source-dir "*.txt"))))
+  (let* ((source-files (files-in-dir source-dir)))
     (iterate (for f in source-files)
+      (ensure-directories-exist 
+        (cat (replace-all 
+               (directory-namestring f) 
+               "/source/" "/") 
+             (pathname-name f) 
+             ".html"))
       (write-to-file (mak-page-dynamic (namestring f))
-                     (merge-pathnames out-dir
-                                      (cat (pathname-name f)
-                                           ".html"))))))
+                     (cat (replace-all 
+                            (directory-namestring f) 
+                            "/source/" "/") 
+                          (pathname-name f) 
+                          ".html")
+                     ))))
 
 
-(defun complete-update-ls ()
-  
-    (update-directory (cat *root-dir* "source/") *root-dir*)
-    (update-directory (cat *root-dir* "source/contact/") (cat *root-dir* "contact/"))
-    (update-directory (cat *root-dir* "source/blog/") 
-                      (cat *root-dir* "blog/"))
-    (trivial-shell:shell-command "server sync")
+(defun complete-update (root-dir)
+    (update-directory (cat root-dir "source/") root-dir)
+    
     )
+(defun complete-update-ls () (complete-update *ls-a-root-dir*)
+  (trivial-shell:shell-command "server syncls"))
+(defun complete-update-rad () (complete-update *alexradcliffe-root-dir*)
+  (trivial-shell:shell-command "server syncrad"))
 
 (defun main ()
     (complete-update-ls))
+
+(defun temp () 
+  (merge 'list  (directory (cat *alexradcliffe-root-dir* "source/*/*.txt")) (directory (cat *alexradcliffe-root-dir* "source/*.txt"))
+       (lambda (x y) (< (length (namestring x) ) (length (namestring y))))  ))

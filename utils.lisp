@@ -88,28 +88,54 @@
 (defun prepend-page (sym)
    (intern (cat "PAGE-" (symbol-name sym))))
 
-(defun path-dir (path)
-    (let* ((rev (reverse path))
-          (pos (position #\/ rev)))
-        (reverse (subseq rev pos))))
+(defun merge-string-lists ( &rest lists)
+    (assert (>= (length lists) 0))
+    (case (length lists)
+          (0 nil)
+          (1 (car lists))
+          (otherwise
+            (apply #'merge-string-lists
+              (cons (merge 'list
+              (car lists)
+              (cadr lists)
+              (lambda (x y) 
+                (< (length (namestring x)) 
+                 (length (namestring y)))))
+                    (cddr lists))))))
+
+(defun files-in-dir (dir &optional  (suffix ".txt") (max-depth 5) )
+    (merge-string-lists 
+      (directory (cat dir "/*" suffix))
+      (directory (cat dir "/*/*" suffix))
+      (directory (cat dir "*/*/*" suffix))
+      (directory (cat dir "*/*/*/*" suffix))
+      (directory (cat dir "*/*/*/*/*" suffix))
+      ))
 
 (defun file-brothers (path &optional (suffix ".txt"))
-    (let ((dir (path-dir path)))
+    (let ((dir (directory-namestring path)))
       (remove-if (lambda (x) (equal x path)) 
                  (mapcar #'namestring 
-                         (directory (cat dir
-                                    "*"
-                                    suffix))))))
+                         (files-in-dir dir suffix)))))
 
 (defun file-brothers-links (pathlist)
     (let* ((file-datae (mapcar (lambda (x)
                            (parse-source-file (read-from-file x)))
                          pathlist))
            (relative-outfile-links 
-            (mapcar (lambda (x) (cat "/blog/"
-                                     x 
-                                     ".html")) 
-                    (mapcar #'pathname-name pathlist))))
+            (mapcar (lambda (x)
+                      (replace-all 
+                        (subseq x  
+                               (+ (length "/source") 
+                               (search "/source/" 
+                                       (namestring x))))
+                        ".txt"
+                        ".html")) 
+                    pathlist)))
+
+
+
+      (print relative-outfile-links)
       (mapcar 
         (lambda (data a-link)
           `(in p
