@@ -112,6 +112,39 @@
       (directory (cat dir "*/*/*/*/*" suffix))
       ))
 
+(defun non-source-brothers (path)
+    (let* ((dir (replace-all (directory-namestring path)
+                            "/source/"
+                            "/"))
+           (files (remove-if (lambda (x) 
+                   (search ".html" x 
+                           :start2 (- (length x) 6)
+                           :end2 (length x)))
+                 (mapcar #'namestring 
+                         (uiop:directory-files dir))))
+           (outdir-prefix (cat (subseq path 
+                                       0
+                                       (search "/source/" 
+                                               (namestring path)))
+                               "/"))
+           (files-without-prefix (mapcar 
+                                   (lambda (x)
+                                     (subseq x
+                                             (1- 
+                                              (length outdir-prefix)))) 
+                                   files)))
+      ;(format t "Input filename: ~A~%" path)
+      ;(format t "Directory to search in: ~A~%" dir)
+      ;(format t "Prefix: ~A~%" outdir-prefix)
+      (mapcar 
+        (lambda (a-file)
+          `(in p
+            ,(link
+              a-file
+              a-file)))
+        files-without-prefix)
+      ))
+
 (defun file-brothers (path &optional (suffix ".txt"))
     (let ((dir (directory-namestring path)))
       (remove-if (lambda (x) (equal x path)) 
