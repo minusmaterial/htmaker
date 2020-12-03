@@ -70,7 +70,15 @@
                     (file-brothers filepath))
                   i
                   filepath)
+                (mak-html-iterator
+                  (non-source-brothers filepath)
+                  i
+                  filepath)
                 "<HR />~%"))
+          ((eq (car form) 'evaluate)
+           (mak-html-iterator (eval (first (cdr form)))
+                              i
+                              filepath))
           (T (cat (tabs i)
                   (symbol-name (car form))
                   "~%"

@@ -13,6 +13,5 @@
 			   (:file "parser")
 			   (:file "config")
                (:file "htmaker")
-			   (:file "blog-post-generator")
 			   ))
 
