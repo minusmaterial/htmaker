@@ -168,7 +168,7 @@
   (trivial-shell:shell-command "server syncrad"))
 
 (defun main ()
-    (complete-update-ls))
+    (complete-update-rad))
 
 (defun temp () 
   (merge 'list  (directory (cat *alexradcliffe-root-dir* "source/*/*.txt")) (directory (cat *alexradcliffe-root-dir* "source/*.txt"))
