@@ -10,7 +10,7 @@
   '((in p "But thus do I counsel you, my friends: distrust all in whom the impulse to punish is powerful! ")
     (in p "He is a barbarian, and thinks the customs of his tribe and island are the laws of nature.")
     (in p "Moloch! Moloch! Robot apartments! Invisible suburbs! Skeleton treasuries! Blind capitals! Demonic industries! Spectral nations!")
-    (in p "The stories and information posted here are artistic works of fiction and falsehood. Only a fool would take anything posted here as fact.")))
+    (in p "\"The stories and information posted here are artistic works of fiction and falsehood. Only a fool would take anything posted here as fact.\"")))
 
 (defparameter *ar-sidebar*
     `(in-opt ul 
@@ -118,6 +118,7 @@
               "class=\"sidenav\"")
              (img "/resources/crazybacterialgo.png")
              (in li (link "Home" "/index.html"))
+             (in li (link "Advent of Code" "/advent/2020/advent_2020.html"))
              (in li (link "Files" "files/files.html"))
              (in-opt li ("class=\"foot\"") 
                      (evaluate 
@@ -138,7 +139,22 @@
                   (in h1 "ls-a")
                   page-text))))) 
 
-(defparameter *default-skeleton* *index-skeleton*)
+(defparameter *standard-skeleton*
+  `("<!DOCTYPE html>"
+      (in html
+          (in head
+              ,*page-header*
+              (in title page-title))
+          (in body
+              ,*sidebar*
+              (in div
+                  (in h1 page-title)
+                  page-text
+                  "<HR />"
+                  (in-opt p ("class=\"tags\"") ("Tags: " page-tags))
+                  )))))
+
+(defparameter *default-skeleton* *standard-skeleton*)
 
 (defparameter *folder-index-skeleton*
       `("<!DOCTYPE html>"

@@ -14,6 +14,7 @@
                                  sym 
                                  form
                                  :test #'equal)))
+      (format t "~A~%" path)
       (format nil (mak-html form path))))
 
 (defun mak-page-dynamic (filepath)
@@ -30,6 +31,7 @@
                               ((eq info nil) reps) 
                               (push (prepend-page (pop info)) reps)
                               (push (pop info) reps)))))
+      (format t "~a~%" (find 'sourcefile4-2  replacements))
       (mak-page skeleton 
                 :replacements 
                 (concatenate 'list replacements (list 'page-path filepath))
@@ -39,7 +41,7 @@
 
 (defun update-directory (source-dir out-dir)
   (let* ((source-files (files-in-dir source-dir)))
-    (format t "~A~%" out-dir)
+    ;(format t "~A~%" out-dir)
     (iterate (for f in source-files)
       (ensure-directories-exist 
         (cat (replace-all 
@@ -66,7 +68,7 @@
   (format t "~A~%" (trivial-shell:shell-command "server syncrad")))
 
 (defun main ()
-    (complete-update-rad)
+    ;(complete-update-rad)
     (complete-update-ls))
 
 (defun temp () 
