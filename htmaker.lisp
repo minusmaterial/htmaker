@@ -15,7 +15,7 @@
                                  form
                                  :test #'equal)))
       (format t "~A~%" path)
-      (format nil (mak-html form path))))
+      (mak-html form path)))
 
 (defun mak-page-dynamic (filepath)
     (let* ((rawtext (read-from-file filepath))
@@ -31,7 +31,8 @@
                               ((eq info nil) reps) 
                               (push (prepend-page (pop info)) reps)
                               (push (pop info) reps)))))
-      (format t "~a~%" (find 'sourcefile4-2  replacements))
+      ;(format t "~a~%" (find 'sourcefile4-2  replacements))
+      ;(format t "~A~%" info)
       (mak-page skeleton 
                 :replacements 
                 (concatenate 'list replacements (list 'page-path filepath))

@@ -1,5 +1,7 @@
 (in-package #:htmaker)
 
+(defparameter nline '(#\newline))
+
 (defun link (text addr &key  (cla nil cla-p) 
                              (depth 0))
     (if cla-p
@@ -33,36 +35,36 @@
     (cond ((eq (car form) 'in)
            (cat (tabs i) 
                 "<" (symbol-name (car (cdr form))) ">"
-                "~%"
+                nline
                 (mak-html-iterator (cdr (cdr form)) (+ i 1) filepath)
                 (tabs i)
                 "</" (symbol-name (car (cdr form))) ">"
-                "~%"
+                nline
                 ))
           ((eq (car form) 'in-opt)
                    (cat (tabs i)
                         "<" (symbol-name (car (cdr form))) 
                         " " (apply #'cat (car (cdr (cdr form))))
                         ">"
-                        "~%"
+                        nline
                         (mak-html-iterator (cdr (cdr (cdr form))) 
                                            (+ i 1) filepath)
                         (tabs i)
                         "</" (symbol-name (car (cdr form))) ">"
-                        "~%"
+                        nline
                         ))
           ((eq (car form) 'link)
            (cat (tabs i)
                 (link (car (cdr form)) (car (cdr (cdr form))))
-                "~%"))
+                nline))
           ((eq (car form) 'link-rel)
            (cat (tabs i)
                 (link-rel (car (cdr form)) (car (cdr (cdr form))))
-                "~%"))
+                nline))
           ((eq (car form) 'img)
            (cat (tabs i)
                 (img (car (cdr form)))
-                "~%"))
+                nline))
           ((eq (car form) 'index-links)
            (cat (tabs i)
                 (mak-html-iterator 
@@ -81,15 +83,15 @@
                               filepath))
           (T (cat (tabs i)
                   (symbol-name (car form))
-                  "~%"
+                  nline
                   (mak-html-iterator (cdr form) i filepath)))))
   
 (defun mak-html-iterator (form i &optional (path "~"))
     (if (not (non-empty-list-p form))
         ;It's not a list of atoms- just an atom.  So echo the atom.
         (cond ((eq nil form) "")
-              ((typep form 'string) (cat (tabs i) form "~%"))
-              (T (cat (symbol-name form) "~%")))
+              ((typep form 'string) (cat (tabs i) form nline))
+              (T (cat (symbol-name form) nline)))
         ;Else, it's a non-empty list.  So unless it's a special form, recurse.
         (if (not (symbolp (car form)))
             (cat (mak-html-iterator (car form) i path)

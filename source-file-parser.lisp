@@ -34,4 +34,5 @@
 (defun parse-source-file (rawtext)
     (let* ((lines (split-source-file-text (parse-md rawtext)))
            (info (get-source-file-info lines)))
+      ;(format t "~A~%" lines)
       info)) 
