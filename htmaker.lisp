@@ -69,8 +69,9 @@
   (format t "~A~%" (trivial-shell:shell-command "server syncrad")))
 
 (defun main ()
-    ;(complete-update-rad)
-    (complete-update-ls))
+    (complete-update-rad)
+    ;(complete-update-ls)
+    )
 
 (defun temp () 
   (merge 'list  (directory (cat *alexradcliffe-root-dir* "source/*/*.txt")) (directory (cat *alexradcliffe-root-dir* "source/*.txt"))
