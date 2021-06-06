@@ -63,14 +63,15 @@
     (update-directory (cat root-dir "source/") root-dir)
     
     )
-(defun complete-update-ls () (complete-update *ls-a-root-dir*)
-  (format t "~A~%" (trivial-shell:shell-command "server syncls")))
-(defun complete-update-rad () (complete-update *alexradcliffe-root-dir*)
-  (format t "~A~%" (trivial-shell:shell-command "server syncrad")))
+(defun complete-update-ls () (complete-update *ls-a-root-dir*))
+(defun complete-update-rad () (complete-update *alexradcliffe-root-dir*))
+
 
 (defun main ()
-    (complete-update-rad)
-    ;(complete-update-ls)
+    (format t "command line args: ~A~%" (uiop:command-line-arguments))
+    (if (uiop:command-line-arguments) 
+        (complete-update (check-trailing-slash (car (uiop:command-line-arguments))))
+        (format t "Give the path to the dir to process!~%"))
     )
 
 (defun temp () 

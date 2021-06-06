@@ -10,7 +10,8 @@
   '((in p "But thus do I counsel you, my friends: distrust all in whom the impulse to punish is powerful! ")
     (in p "He is a barbarian, and thinks the customs of his tribe and island are the laws of nature.")
     (in p "Moloch! Moloch! Robot apartments! Invisible suburbs! Skeleton treasuries! Blind capitals! Demonic industries! Spectral nations!")
-    (in p "\"The stories and information posted here are artistic works of fiction and falsehood. Only a fool would take anything posted here as fact.\"")))
+    (in p "\"The stories and information posted here are artistic works of fiction and falsehood. Only a fool would take anything posted here as fact.\"")
+    (in p "If...if...We didn't love freedom enough. And even more – we had no awareness of the real situation.... We purely and simply deserved everything that happened afterward.")))
 
 (defparameter *ar-sidebar*
     `(in-opt ul 
@@ -20,6 +21,7 @@
              (in li (link "Home" "/index.html"))
              (in li (link "Contact" "/contact.html"))
              (in li (link "Projects" "projects/index_projects.html"))
+             (in li (link "Blog" "blog/index_blog.html"))
              (in-opt li ("class=\"foot\"") 
                (evaluate (nth (random (length *ar-sidebar-quotes*))
                *ar-sidebar-quotes*))))) 
@@ -211,6 +213,23 @@
 
                           )))))))  
 
+(defparameter *ar-blog-index-skeleton*
+      `("<!DOCTYPE html>"
+        (in html 
+            (in head
+                ,*ar-page-header*
+                (in title page-title))
+            (in body 
+                ,*ar-sidebar*
+                (in div 
+                    (in h1 page-title)
+                    "<HR />"
+                    page-text
+                    "<HR />"
+                    index-links
+                    "<HR />"
+                    )))))
+
 (defparameter *blog-index-skeleton*
       `("<!DOCTYPE html>"
         (in html 
@@ -241,4 +260,41 @@
                   page-text
                   )))))
 
+(defparameter *lh-page-header*
+      '((link-rel "stylesheet" "/style.css")))
 
+(defparameter *lh-skeleton* 
+  `("<!DOCTYPE html>"
+      (in html
+          (in head
+              ,*lh-page-header*
+              (in title page-title))
+          (in body
+              (in div
+                  (in h1 page-title)
+                  page-text
+                  )))))
+
+(defparameter *lh-index-skeleton* 
+  `("<!DOCTYPE html>"
+      (in html
+          (in head
+              ,*lh-page-header*
+              (in title page-title))
+          (in body
+              (in div
+                  (in h1 page-title)
+                  page-text
+                  )))))
+
+(defparameter *lh-essay-skeleton* 
+  `("<!DOCTYPE html>"
+      (in html
+          (in head
+              ,*lh-page-header*
+              (in title page-title))
+          (in body
+              (in div
+                  (in h1 page-title)
+                  page-text
+                  )))))
