@@ -10,9 +10,17 @@
       ;;;first, all of the non-text fields
       (iter (for line in lines)
             (when (starts-with-substr-p line marker)
-              (let ((pair (split-sequence:split-sequence 
+              (let* ((longpair (split-sequence:split-sequence 
                             #\: 
-                            (replace-all line marker ""))))
+                            (replace-all line marker "")))
+                     (pair (list (car longpair)
+                                 (cond ((eq (type-of (cadr longpair))
+                                           'cons)
+                                       (apply #'cat
+                                        (cadr longpair)))
+                                       (t
+                                       (cadr longpair)))
+                                 )))
                 (collect (intern (string-upcase (car pair))))
                 (collect (if (find #\, (cadr pair))
                              (split-sequence:split-sequence
