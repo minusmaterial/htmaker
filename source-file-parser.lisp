@@ -6,7 +6,7 @@
     input-text))
 
 (defun get-source-file-info (lines &optional (marker "!inf:"))
-    (append 
+    (append
       ;;;first, all of the non-text fields
       (iter (for line in lines)
             (when (starts-with-substr-p line marker)
@@ -30,17 +30,17 @@
       (list 
         (intern "TEXT")
           (apply #'cat
-            (mapcar #'cat
-                    (remove-if (lambda (line) 
-                                 (starts-with-substr-p line marker))
-                               lines)
-                    (n-list '(#\newline) (length (remove-if 
-                                                  (lambda (line) 
-                                                    (starts-with-substr-p line marker))
-                                                  lines)))))))) 
+            (let* ((only-text-lines
+                     (remove-if (lambda (line) 
+                                         (starts-with-substr-p line marker))
+                                         lines)))
+                 (mapcar #'cat
+                        (n-list '(#\newline) (length only-text-lines))
+                        only-text-lines)))))) 
 
 (defun parse-source-file (rawtext)
-    (let* ((lines (split-source-file-text (parse-md rawtext)))
-           (info (get-source-file-info lines)))
-      ;(format t "~A~%" lines)
+    (let* ((lines (split-source-file-text rawtext))
+           (info (get-source-file-info lines))
+           (text (getf info 'text)))
+      (print text)
       info)) 

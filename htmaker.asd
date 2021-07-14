@@ -6,7 +6,12 @@
   :license  "Specify license here"
   :version "0.0.1"
   :serial t
-  :depends-on (:iterate :trivial-shell :split-sequence :markdown.cl)
+  :depends-on (:iterate 
+  	:trivial-shell 
+	:split-sequence 
+	:markdown.cl 
+	:external-program
+	:bordeaux-threads)
   :components ((:file "package")
 			   (:file "utils")
 			   (:file "source-file-parser")

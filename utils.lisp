@@ -78,8 +78,29 @@
       (setf out (check-trailing-slash out))))
 
 (defun parse-md (text)
-    (markdown:parse text)
-    )
+    (markdown:parse text))
+
+(defun parse-pandoc (text)
+    (print (uiop/run-program:run-program "pandoc -t html -f markdown" :input (uiop:process-info-output (uiop:launch-program (cat "echo -e \"" text "\"") :output :stream)) :output :string))
+
+  (let 
+    ((proc (uiop:launch-program 
+             "pandoc -t html -f markdown" 
+             :input :stream 
+             :output :stream))) 
+    (print (uiop:process-alive-p proc  ) )
+    (write text
+           :stream 
+           (uiop:process-info-input proc)) 
+    (uiop:terminate-process proc)
+
+    (print (uiop:process-alive-p proc  ) )
+    (force-output (uiop:process-info-input proc)) 
+
+    (print (uiop:process-alive-p proc  ) )
+    (let ((s (uiop:process-info-output proc))) 
+      ;(read-line s)
+      )))
 
 (defun n-list (thing n)
     (if (<= n 0)
