@@ -81,8 +81,18 @@
     (markdown:parse text))
 
 (defun parse-pandoc (text)
-    (print (uiop/run-program:run-program "pandoc -t html -f markdown" :input (uiop:process-info-output (uiop:launch-program (cat "echo -e \"" text "\"") :output :stream)) :output :string))
+    (uiop/run-program:run-program 
+      "pandoc -f markdown-smart  -t html " 
+      :input 
+      (uiop:process-info-output 
+        (uiop:launch-program 
+          (cat "echo -e \"" text "\"") 
+          :output :stream)) 
+      :output :string)
 
+  )
+
+(defun alt-pandoc (text)
   (let 
     ((proc (uiop:launch-program 
              "pandoc -t html -f markdown" 

@@ -29,14 +29,14 @@
       ;;;finally, the text field
       (list 
         (intern "TEXT")
-          (apply #'cat
+          (parse-pandoc (apply #'cat
             (let* ((only-text-lines
                      (remove-if (lambda (line) 
                                          (starts-with-substr-p line marker))
                                          lines)))
                  (mapcar #'cat
                         (n-list '(#\newline) (length only-text-lines))
-                        only-text-lines)))))) 
+                        only-text-lines))))))) 
 
 (defun parse-source-file (rawtext)
     (let* ((lines (split-source-file-text rawtext))
