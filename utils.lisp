@@ -81,15 +81,22 @@
     (markdown:parse text))
 
 (defun parse-pandoc (text)
+  (let* ((fname  "tmp-file-19192192.txt"))
+    (with-open-file (*standard-output* fname
+                                     :direction :output
+                                     :if-exists :supersede)
+     (write-string text))
     (uiop/run-program:run-program 
-      "pandoc -f markdown-smart  -t html " 
+      "pandoc -f markdown-smart -t latex | pandoc --webtex -f latex -t html" 
       :input 
       (uiop:process-info-output 
         (uiop:launch-program 
-          (cat "echo -e \"" text "\"") 
+          (cat "cat " fname) 
           :output :stream)) 
       :output :string)
-
+    ;(uiop:run-program (cat "rm " fname))
+    )
+    
   )
 
 (defun alt-pandoc (text)

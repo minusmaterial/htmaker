@@ -1,9 +1,9 @@
 (in-package #:htmaker)
 
 (defun split-source-file-text (input-text)
-    (split-sequence:split-sequence
+    (print (split-sequence:split-sequence
     #\Newline 
-    input-text))
+    input-text)))
 
 (defun get-source-file-info (lines &optional (marker "!inf:"))
     (append
@@ -36,6 +36,7 @@
                                          lines)))
                  (mapcar #'cat
                         (n-list '(#\newline) (length only-text-lines))
+                        (print only-text-lines)
                         only-text-lines))))))) 
 
 (defun parse-source-file (rawtext)
