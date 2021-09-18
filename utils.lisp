@@ -87,7 +87,7 @@
                                      :if-exists :supersede)
      (write-string text))
     (uiop/run-program:run-program 
-      "pandoc -f markdown-smart -t latex | pandoc --webtex -f latex -t html" 
+      "pandoc --mathml -f markdown -t html" 
       :input 
       (uiop:process-info-output 
         (uiop:launch-program 

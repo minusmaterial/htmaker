@@ -36,12 +36,12 @@
                                          lines)))
                  (mapcar #'cat
                         (n-list '(#\newline) (length only-text-lines))
-                        (print only-text-lines)
+                        ;(print only-text-lines)
                         only-text-lines))))))) 
 
 (defun parse-source-file (rawtext)
     (let* ((lines (split-source-file-text rawtext))
            (info (get-source-file-info lines))
            (text (getf info 'text)))
-      (print text)
+      ;(print text)
       info)) 
